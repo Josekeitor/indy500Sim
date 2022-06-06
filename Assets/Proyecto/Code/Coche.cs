@@ -15,7 +15,8 @@ public class Coche : MonoBehaviour
     bool inFirstCurve;
     int n;
     MeshFilter mf;
-
+    int vuelta_actual ;
+    
 
     Vector3 EvalBezier(float t) {
         Vector3 bez = Vector3.zero;
@@ -26,6 +27,7 @@ public class Coche : MonoBehaviour
                  bez += u * firstGuides[i];
             } else {
                  bez += u * secondGuides[i];
+                
             }
            
         }
@@ -63,6 +65,7 @@ public class Coche : MonoBehaviour
         inFirstCurve = true;
         param = 0.001f;
         originals = gameObj.GetComponent<MeshFilter>().mesh.vertices;
+        vuelta_actual = 0;
 
         firstGuides.Add(new Vector3(0, 0, 0));
         firstGuides.Add(new Vector3(26.3f, 0, 0));
@@ -88,6 +91,7 @@ public class Coche : MonoBehaviour
         if (param >= 1.0f) {
             param = 0.001f;
             inFirstCurve = !inFirstCurve;
+            if (inFirstCurve) vuelta_actual++;
         }
         Vector3 prev = EvalBezier(param);
         param += 0.001f;
