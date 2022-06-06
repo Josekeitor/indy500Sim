@@ -14,6 +14,7 @@ public class Coche : MonoBehaviour
     List<Vector3> secondGuides;
     bool inFirstCurve;
     int n;
+    float accelerationFactor;
     MeshFilter mf;
 
 
@@ -84,13 +85,20 @@ public class Coche : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        accelerationFactor = 1;
+        if(Input.GetKey("up")){
+            accelerationFactor = 2.0f;
+        } else if (Input.GetKey("down")) {
+            accelerationFactor = 0.5f;
+        }
+
         if (param >= 1.0f) {
             param = 0.001f;
             inFirstCurve = !inFirstCurve;
         }
         Vector3 prev = EvalBezier(param);
-        param += 0.001f;
+        param += accelerationFactor * 0.001f;
         pos = EvalBezier(param);
         Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
         
