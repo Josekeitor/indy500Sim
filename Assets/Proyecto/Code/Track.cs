@@ -50,6 +50,7 @@ public class Track : MonoBehaviour
 
         }
         */
+        cars.Sort();
         
     }
 }

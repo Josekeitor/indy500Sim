@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coche : MonoBehaviour
+public class Coche : MonoBehaviour, IComparable
 {
     // Start is called before the first frame update
 
@@ -48,6 +48,17 @@ public class Coche : MonoBehaviour
         if (n == 0) return 1;
         else return n * Factorial(n - 1);
     }
+
+    public int CompareTo(object obj) {
+        if (obj == null) return 1;
+
+        Coche otherCoche = obj as Coche;
+        if (otherCoche != null)
+            return this.getProgress().CompareTo(otherCoche.getProgress());
+        else
+           throw new ArgumentException("Object is not a Coche");
+    }
+
 
 
     Vector3 Interpolar(Vector3 A, Vector3 B, float t) {
