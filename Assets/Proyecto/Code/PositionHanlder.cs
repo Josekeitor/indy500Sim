@@ -7,6 +7,8 @@ public class PositionHanlder : MonoBehaviour
 {
     List<Coche> cars;
     List<TextMeshProUGUI> textComponents;
+
+    string[] positions = {"1st", "2nd", "3rd", "4th", "5th", "6th"};
     // Start is called before the first frame update
     void Start()
     {
@@ -19,10 +21,10 @@ public class PositionHanlder : MonoBehaviour
         cars.Sort();
         for (int i = 0; i < cars.Count; i++) {
             if(cars[i].getIndex() == 0){
-                textComponents[i].SetText("Player - " + (i + 1));
+                textComponents[i].SetText(positions[i] + "  Player");
             }
             else{
-                textComponents[i].SetText("AI "+ cars[i].getIndex() + " - "+ (i + 1));
+                textComponents[i].SetText(positions[i] + "  AI "+ cars[i].getIndex());
 
             }
         }
