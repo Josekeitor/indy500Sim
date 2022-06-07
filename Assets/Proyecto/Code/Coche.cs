@@ -26,6 +26,7 @@ public class Coche : MonoBehaviour, IComparable
     int life;
     int carIndex;
     int n;
+    float speed;
 
 
     Vector3 EvalBezier(float t) {
@@ -89,10 +90,11 @@ public class Coche : MonoBehaviour, IComparable
     void Start()
     {
         life = 100;
+        speed = 0.0001f;
         firstGuides = new List<Vector3>();
         secondGuides = new List<Vector3>();
         inFirstCurve = true;
-        param = 0.001f;
+        param = speed;
 
         currentLap = 0;
         r = 1;
@@ -135,13 +137,13 @@ public class Coche : MonoBehaviour, IComparable
         
 
         if (param >= 1.0f) {
-            param = 0.001f;
+            param = speed;
             inFirstCurve = !inFirstCurve;
             if (inFirstCurve) currentLap++;
             halfLapCounter ++;
         }
         Vector3 prev = EvalBezier(param);
-        param += accelerationFactor * 0.001f;
+        param += accelerationFactor * speed;
         pos = EvalBezier(param);
         Matrix4x4 t = Transformations.TranslateM(pos.x + offset.x, pos.y + offset.y, pos.z + offset.z);
 
