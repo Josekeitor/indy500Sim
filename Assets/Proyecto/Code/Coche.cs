@@ -6,9 +6,9 @@ public class Coche : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public GameObject gameObj;
+    public GameObject carObject;
     Vector3[] originals;
-    Vector3 pos;
+    public Vector3 pos;
     float param;
     List<Vector3> firstGuides;
     List<Vector3> secondGuides;
@@ -16,6 +16,12 @@ public class Coche : MonoBehaviour
     int n;
     float accelerationFactor;
     MeshFilter mf;
+    public Vector3 offset;
+    public float r;
+    public bool playerCar;
+    float mass;
+    int currentLap;
+    int halfLapCounter;
 
 
     Vector3 EvalBezier(float t) {
@@ -63,7 +69,10 @@ public class Coche : MonoBehaviour
         secondGuides = new List<Vector3>();
         inFirstCurve = true;
         param = 0.001f;
-        originals = gameObj.GetComponent<MeshFilter>().mesh.vertices;
+        r = 1;
+        mass = 500;
+        originals = carObject.GetComponent<MeshFilter>().mesh.vertices;
+        
 
         firstGuides.Add(new Vector3(0, 0, 0));
         firstGuides.Add(new Vector3(26.3f, 0, 0));
@@ -81,17 +90,28 @@ public class Coche : MonoBehaviour
         secondGuides.Add(new Vector3(0, 0, 0));
         
         n = firstGuides.Count;
+
     }
 
     // Update is called once per frame
     void Update()
     {   
-        accelerationFactor = 1;
-        if(Input.GetKey("up")){
-            accelerationFactor = 2.0f;
-        } else if (Input.GetKey("down")) {
-            accelerationFactor = 0.5f;
+        if(inFirstCurve){
+            currentLap += 1;
+            halfLapCounter = 0;
+        } else {
+            halfLapCounter = 1;
         }
+
+        accelerationFactor = 1;
+        if(playerCar){
+            if(Input.GetKey("up")){
+                accelerationFactor = 2.0f;
+            } else if (Input.GetKey("down")) {
+                accelerationFactor = 0.5f;
+            }
+        }
+        
 
         if (param >= 1.0f) {
             param = 0.001f;
@@ -106,9 +126,17 @@ public class Coche : MonoBehaviour
         float alpha = Mathf.Atan2(-du.z, du.x) * Mathf.Rad2Deg;
         Matrix4x4 r = Transformations.RotateM(alpha, Transformations.AXIS.AX_Y);
 
-        gameObj.GetComponent<MeshFilter>().mesh.vertices = ApplyTransform(t * r, originals);
-        gameObj.GetComponent<MeshFilter>().mesh.RecalculateBounds();
+        carObject.GetComponent<MeshFilter>().mesh.vertices = ApplyTransform(t * r, originals);
+        carObject.GetComponent<MeshFilter>().mesh.RecalculateBounds();
+    }
 
-        
+    public Vector3 getForce() {
+        Vector3 norm = Math3D.Normalize(pos);
+
+        return new Vector3 (mass * accelerationFactor * norm.x, 0 , mass * accelerationFactor * norm.z);
+    }
+
+    public float getProgress() {
+        return currentLap + param + halfLapCounter;
     }
 }
