@@ -71,7 +71,7 @@ public class Coche : MonoBehaviour
         inFirstCurve = true;
         param = 0.001f;
 
-        vuelta_actual = 0;
+        currentLap = 0;
         r = 1;
         mass = 500;
         originals = carObject.GetComponent<MeshFilter>().mesh.vertices;
@@ -99,12 +99,7 @@ public class Coche : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        if(inFirstCurve){
-            currentLap += 1;
-            halfLapCounter = 0;
-        } else {
-            halfLapCounter = 1;
-        }
+       
 
         accelerationFactor = 1;
         if(playerCar){
@@ -119,7 +114,8 @@ public class Coche : MonoBehaviour
         if (param >= 1.0f) {
             param = 0.001f;
             inFirstCurve = !inFirstCurve;
-            if (inFirstCurve) vuelta_actual++;
+            if (inFirstCurve) currentLap++;
+            halfLapCounter ++;
         }
         Vector3 prev = EvalBezier(param);
         param += accelerationFactor * 0.001f;
@@ -141,6 +137,6 @@ public class Coche : MonoBehaviour
     }
 
     public float getProgress() {
-        return currentLap + param + halfLapCounter;
+        return  param*0.5f + halfLapCounter*0.5f;
     }
 }
