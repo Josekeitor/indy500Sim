@@ -53,8 +53,8 @@ public class ParticleSystem : MonoBehaviour
                 Particle particle = scripts[i];
                 Coche car = cars[j];
                 if(particle.CheckCollision(car)){
-                    Debug.Log("Collided with car");
                     particle.Bounce(car);
+                    car.damage();
                 }
             }
         }

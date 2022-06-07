@@ -23,9 +23,9 @@ public class Coche : MonoBehaviour, IComparable
     float param;
     int currentLap;
     int halfLapCounter;
+    int life;
     int carIndex;
     int n;
-
 
 
     Vector3 EvalBezier(float t) {
@@ -88,6 +88,7 @@ public class Coche : MonoBehaviour, IComparable
 
     void Start()
     {
+        life = 100;
         firstGuides = new List<Vector3>();
         secondGuides = new List<Vector3>();
         inFirstCurve = true;
@@ -125,9 +126,9 @@ public class Coche : MonoBehaviour, IComparable
 
         accelerationFactor = 1;
         if(playerCar){
-            if(Input.GetKey("up")){
+            if(Input.GetKey("x")){
                 accelerationFactor = 2.0f;
-            } else if (Input.GetKey("down")) {
+            } else if (Input.GetKey("z")) {
                 accelerationFactor = 0.5f;
             }
         }
@@ -142,14 +143,15 @@ public class Coche : MonoBehaviour, IComparable
         Vector3 prev = EvalBezier(param);
         param += accelerationFactor * 0.001f;
         pos = EvalBezier(param);
-        Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
-        
+        Matrix4x4 t = Transformations.TranslateM(pos.x + offset.x, pos.y + offset.y, pos.z + offset.z);
+
         Vector3 du = (pos - prev).normalized;
         float alpha = Mathf.Atan2(-du.z, du.x) * Mathf.Rad2Deg;
         Matrix4x4 r = Transformations.RotateM(alpha, Transformations.AXIS.AX_Y);
 
         carObject.GetComponent<MeshFilter>().mesh.vertices = ApplyTransform(t * r, originals);
         carObject.GetComponent<MeshFilter>().mesh.RecalculateBounds();
+
     }
 
     public Vector3 getForce() {
@@ -167,4 +169,20 @@ public class Coche : MonoBehaviour, IComparable
 
         }
     }
+
+    public void damage() {
+        life--;
+        if (life == 0) {
+            destroy();
+        }        
+    }
+
+    void destroy() {
+        Destroy(carObject);
+    }
+
+    public int getCurrentLife() {
+        return life;
+    }
 }
+
