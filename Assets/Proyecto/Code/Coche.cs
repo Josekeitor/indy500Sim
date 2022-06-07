@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class Coche : MonoBehaviour, IComparable
     float mass;
     int currentLap;
     int halfLapCounter;
+    int carIndex;
 
 
     Vector3 EvalBezier(float t) {
@@ -75,6 +77,13 @@ public class Coche : MonoBehaviour, IComparable
         }
         return result;
     }
+    public void setIndex (int index){
+        carIndex = index;
+    }
+    public int getIndex (){
+        return carIndex;
+    }
+
     void Start()
     {
         firstGuides = new List<Vector3>();

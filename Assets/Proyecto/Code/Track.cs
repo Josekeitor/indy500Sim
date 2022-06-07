@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Track : MonoBehaviour
 {
-    List<Coche> cars;
+    public List<Coche> cars;
     public List<GameObject> carObjects;
     ParticleSystem ps;
     int[] positions;
@@ -20,6 +20,7 @@ public class Track : MonoBehaviour
         for(int i = 0; i < carObjects.Count;  i++) {
             carObjects[i].AddComponent<Coche>();
             Coche car = carObjects[i].GetComponent<Coche>();
+            car.setIndex(i);
             cars.Add(car);
             if(i == 0){
                 cars[i].playerCar = true;
