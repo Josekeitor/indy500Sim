@@ -1,27 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coche : MonoBehaviour
+public class Coche : MonoBehaviour, IComparable
 {
     // Start is called before the first frame update
 
     public GameObject carObject;
-    Vector3[] originals;
     public Vector3 pos;
-    float param;
+    public Vector3 offset;
+    public bool playerCar;
+    public float r;
+
     List<Vector3> firstGuides;
     List<Vector3> secondGuides;
-    bool inFirstCurve;
-    int n;
-    float accelerationFactor;
+    Vector3[] originals;
     MeshFilter mf;
-    public Vector3 offset;
-    public float r;
-    public bool playerCar;
+    bool inFirstCurve;
+    float accelerationFactor;
     float mass;
+    float param;
     int currentLap;
     int halfLapCounter;
+    int carIndex;
+    int n;
+
 
 
     Vector3 EvalBezier(float t) {
@@ -33,6 +37,7 @@ public class Coche : MonoBehaviour
                  bez += u * firstGuides[i];
             } else {
                  bez += u * secondGuides[i];
+                
             }
            
         }
@@ -47,6 +52,17 @@ public class Coche : MonoBehaviour
         if (n == 0) return 1;
         else return n * Factorial(n - 1);
     }
+
+    public int CompareTo(object obj) {
+        if (obj == null) return 1;
+
+        Coche otherCoche = obj as Coche;
+        if (otherCoche != null)
+            return otherCoche.getProgress().CompareTo(this.getProgress());
+        else
+           throw new ArgumentException("Object is not a car");
+    }
+
 
 
     Vector3 Interpolar(Vector3 A, Vector3 B, float t) {
@@ -63,12 +79,21 @@ public class Coche : MonoBehaviour
         }
         return result;
     }
+    public void setIndex (int index){
+        carIndex = index;
+    }
+    public int getIndex (){
+        return carIndex;
+    }
+
     void Start()
     {
         firstGuides = new List<Vector3>();
         secondGuides = new List<Vector3>();
         inFirstCurve = true;
         param = 0.001f;
+
+        currentLap = 0;
         r = 1;
         mass = 500;
         originals = carObject.GetComponent<MeshFilter>().mesh.vertices;
@@ -96,12 +121,7 @@ public class Coche : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        if(inFirstCurve){
-            currentLap += 1;
-            halfLapCounter = 0;
-        } else {
-            halfLapCounter = 1;
-        }
+       
 
         accelerationFactor = 1;
         if(playerCar){
@@ -116,6 +136,8 @@ public class Coche : MonoBehaviour
         if (param >= 1.0f) {
             param = 0.001f;
             inFirstCurve = !inFirstCurve;
+            if (inFirstCurve) currentLap++;
+            halfLapCounter ++;
         }
         Vector3 prev = EvalBezier(param);
         param += accelerationFactor * 0.001f;
@@ -137,6 +159,12 @@ public class Coche : MonoBehaviour
     }
 
     public float getProgress() {
-        return currentLap + param + halfLapCounter;
+        return  param*0.5f + halfLapCounter*0.5f;
+    }
+
+    public void renderPosition(int position) {
+        for (int i = 0; i < position; i++){
+
+        }
     }
 }
