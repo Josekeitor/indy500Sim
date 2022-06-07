@@ -8,22 +8,24 @@ public class Coche : MonoBehaviour, IComparable
     // Start is called before the first frame update
 
     public GameObject carObject;
-    Vector3[] originals;
     public Vector3 pos;
-    float param;
+    public Vector3 offset;
+    public bool playerCar;
+    public float r;
+
     List<Vector3> firstGuides;
     List<Vector3> secondGuides;
-    bool inFirstCurve;
-    int n;
-    float accelerationFactor;
+    Vector3[] originals;
     MeshFilter mf;
-    public Vector3 offset;
-    public float r;
-    public bool playerCar;
+    bool inFirstCurve;
+    float accelerationFactor;
     float mass;
+    float param;
     int currentLap;
     int halfLapCounter;
     int carIndex;
+    int n;
+
 
 
     Vector3 EvalBezier(float t) {
@@ -56,9 +58,9 @@ public class Coche : MonoBehaviour, IComparable
 
         Coche otherCoche = obj as Coche;
         if (otherCoche != null)
-            return this.getProgress().CompareTo(otherCoche.getProgress());
+            return otherCoche.getProgress().CompareTo(this.getProgress());
         else
-           throw new ArgumentException("Object is not a Coche");
+           throw new ArgumentException("Object is not a car");
     }
 
 
@@ -158,5 +160,11 @@ public class Coche : MonoBehaviour, IComparable
 
     public float getProgress() {
         return  param*0.5f + halfLapCounter*0.5f;
+    }
+
+    public void renderPosition(int position) {
+        for (int i = 0; i < position; i++){
+
+        }
     }
 }
