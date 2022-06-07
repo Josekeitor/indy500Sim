@@ -130,7 +130,6 @@ public class Particle : MonoBehaviour
     }
 
     public void Bounce(Coche other) {
-        Debug.Log("Car force: " + other.getForce().ToString("F5"));
         if(p.y + r >= other.pos.y + other.r) {
             //Chocando arriba
             forces.y = -forces.y * rc;

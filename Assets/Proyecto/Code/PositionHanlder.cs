@@ -21,10 +21,19 @@ public class PositionHanlder : MonoBehaviour
         cars.Sort();
         for (int i = 0; i < cars.Count; i++) {
             if(cars[i].getIndex() == 0){
-                textComponents[i].SetText(positions[i] + "  Player");
+                if(cars[i].getCurrentLife() <= 0) {
+                    textComponents[i].SetText(positions[i] + "  Player - DESTROYED");
+                    continue;
+                }
+                textComponents[i].SetText(positions[i] + "  Player - health: " + cars[i].getCurrentLife());
             }
             else{
-                textComponents[i].SetText(positions[i] + "  AI "+ cars[i].getIndex());
+                if (cars[i].getCurrentLife() <= 0){
+                    textComponents[i].SetText(positions[i] + "  AI "+ cars[i].getIndex() + " - DESTROYED");
+                    continue;
+                }
+                textComponents[i].SetText(positions[i] + "  AI "+ cars[i].getIndex() + " - health: " + cars[i].getCurrentLife());
+
 
             }
         }
